@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
      2. MOBILE NAV TOGGLE
   ────────────────────────────────────────── */
   const navToggle = document.getElementById('navToggle');
-  const navLinks  = document.getElementById('navLinks');
+  const navLinks = document.getElementById('navLinks');
 
   navToggle.addEventListener('click', () => {
     const isOpen = navLinks.classList.toggle('open');
@@ -82,15 +82,15 @@ document.addEventListener('DOMContentLoaded', () => {
   let heroCountersDone = false;
 
   function animateCounter(el, target, duration = 1800) {
-    const start     = performance.now();
-    const startVal  = 0;
+    const start = performance.now();
+    const startVal = 0;
 
     const update = (now) => {
-      const elapsed  = now - start;
+      const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
       // Ease-out cubic
-      const ease     = 1 - Math.pow(1 - progress, 3);
-      const current  = Math.round(startVal + (target - startVal) * ease);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(startVal + (target - startVal) * ease);
       el.textContent = current;
       if (progress < 1) requestAnimationFrame(update);
     };
@@ -135,11 +135,11 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < count; i++) {
       const dot = document.createElement('div');
       const size = Math.random() * 3 + 1;
-      const x    = Math.random() * 100;
-      const y    = Math.random() * 100;
-      const dur  = Math.random() * 12 + 8;
-      const delay= Math.random() * 6;
-      const opc  = Math.random() * 0.25 + 0.05;
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      const dur = Math.random() * 12 + 8;
+      const delay = Math.random() * 6;
+      const opc = Math.random() * 0.25 + 0.05;
 
       Object.assign(dot.style, {
         position: 'absolute',
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     style.textContent = `
       @keyframes floatDot {
         0%   { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(${Math.random() > 0.5 ? '' : '-'}${Math.floor(Math.random()*30+10)}px, -${Math.floor(Math.random()*40+20)}px) scale(1.3); }
+        100% { transform: translate(${Math.random() > 0.5 ? '' : '-'}${Math.floor(Math.random() * 30 + 10)}px, -${Math.floor(Math.random() * 40 + 20)}px) scale(1.3); }
       }
     `;
     document.head.appendChild(style);
@@ -170,14 +170,14 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ──────────────────────────────────────────
      7. TESTIMONIAL CAROUSEL
   ────────────────────────────────────────── */
-  const track  = document.getElementById('carouselTrack');
-  const dots   = document.querySelectorAll('.dot');
+  const track = document.getElementById('carouselTrack');
+  const dots = document.querySelectorAll('.dot');
   const btnPrev = document.getElementById('carouselPrev');
   const btnNext = document.getElementById('carouselNext');
 
   if (track) {
-    let current  = 0;
-    const total  = track.children.length;
+    let current = 0;
+    const total = track.children.length;
     let autoTimer;
 
     const goTo = (index) => {
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ──────────────────────────────────────────
      8. CONTACT FORM VALIDATION
   ────────────────────────────────────────── */
-  const form      = document.getElementById('contactForm');
+  const form = document.getElementById('contactForm');
   const submitBtn = document.getElementById('submitBtn');
   const formSuccess = document.getElementById('formSuccess');
 
@@ -277,17 +277,37 @@ document.addEventListener('DOMContentLoaded', () => {
       const allValid = Object.keys(validators).map(validateField).every(Boolean);
       if (!allValid) return;
 
-      // Simulate submission
-      const btnText   = submitBtn.querySelector('.btn-text');
+      // Show loader briefly, then open WhatsApp
+      const btnText = submitBtn.querySelector('.btn-text');
       const btnLoader = submitBtn.querySelector('.btn-loader');
-      btnText.style.display   = 'none';
+      btnText.style.display = 'none';
       btnLoader.style.display = 'inline';
       submitBtn.disabled = true;
 
+      // Collect all field values
+      const nameVal = document.getElementById('name').value.trim();
+      const phoneVal = document.getElementById('phone').value.trim();
+      const emailVal = document.getElementById('email').value.trim();
+      const serviceEl = document.getElementById('service');
+      const serviceVal = serviceEl.options[serviceEl.selectedIndex].text;
+      const messageVal = document.getElementById('message').value.trim();
+
+      // Build formatted WhatsApp message
+      const waText =
+        'New Client Inquiry:%0A%0A' +
+        'Name: ' + encodeURIComponent(nameVal) + '%0A' +
+        'Phone: ' + encodeURIComponent(phoneVal) + '%0A' +
+        'Email: ' + encodeURIComponent(emailVal) + '%0A' +
+        'Service: ' + encodeURIComponent(serviceVal) + '%0A' +
+        'Message: ' + encodeURIComponent(messageVal);
+
+      const waURL = 'https://wa.me/919431778233?text=' + waText;
+
       setTimeout(() => {
+        window.open(waURL, '_blank');
         form.style.display = 'none';
         formSuccess.style.display = 'block';
-      }, 1400);
+      }, 600);
     });
   }
 
